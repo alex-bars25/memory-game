@@ -3,11 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./reset.css">
   <link rel="stylesheet" href="./style.css">
   <title>Memory game</title>
 </head>
   <body>
+    <header>
+      <div class="wrapper">
+        <button class="new-game">Новая игра</button>
+        <button class="leaders-table">Таблица лидеров</button>
+      </div>
+    </header>
+    <main>
+      <div class="wrapper">
+        <h1>Memory game</h1>
+        <div class="score">
+          <p class="moves">Ходы: <span>0</span></p>
+          <p class="matches">Совпадения: <span>0</span></p>
+        </div>
+        <div class="cards">
+          <div class="card open"><span>🚀</span></div>
+          <div class="card">🚀</div>
+          <div class="card">🔥</div>
+          <div class="card">🔥</div>
+          <div class="card">🎉</div>
+          <div class="card">🎉</div>
+          <div class="card">💻</div>
+          <div class="card">💻</div>
+          <div class="card">🌐</div>
+          <div class="card">🌐</div>
+          <div class="card">💾</div>
+          <div class="card">💾</div>
+          <div class="card">🔍</div>
+          <div class="card">🔍</div>
+          <div class="card">🧠</div>
+          <div class="card">🧠</div>
+        </div>
+      </div>
+    </main>
+    <dialog class="modal">
+      <p class="message">
+        Пока нет результатов
+      </p>
+      <div class="modal-buttons">
+        <button class="new-game">Новая игра</button>
+        <button class="close">Закрыть</button>
+      </div>
+    </dialog>
     <script src="./script.js" defer></script>
   </body>
 </html>
