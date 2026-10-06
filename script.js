@@ -64,6 +64,7 @@ function drawNoResultMsg() {
 }
 
 function drawWinMsg(count) {
+  content.textContent = '';
   const title = document.createElement('p');
   title.textContent = 'Вы победили! 🎉🎉🎉';
   const counter = document.createElement('p');
@@ -73,14 +74,22 @@ function drawWinMsg(count) {
   return message;
 }
 
-const results = [['06.10.2026', '10'], ['06.10.2026', '10'], ['06.10.2026', '10'], ['06.10.2026', '10'], ['06.10.2026', '10']]
+function getResults() {
+  const results = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    results.push([key, value]);
+  }
+  return results.sort().sort((a, b) => a[1] - b[1]).slice(0, 10);
+}
 
 function drawTable(results) {
   const table = document.createElement('table');
   const thead = document.createElement('thead');
   const tbody = document.createElement('tbody');
   const headRow = thead.insertRow();
-  const headers = ['Место', 'Дата', 'Число ходов'];
+  const headers = ['Место', 'Число ходов', 'Дата'];
   headers.forEach(item => {
     const cell = document.createElement('th');
     cell.textContent = item;
@@ -91,13 +100,14 @@ function drawTable(results) {
     const cell1 = document.createElement('td');
     cell1.textContent = index + 1;
     const cell2 = document.createElement('td');
-    cell2.textContent = item[0];
+    cell2.textContent = item[1];
     const cell3 = document.createElement('td');
-    cell3.textContent = item[1];
+    cell3.textContent = item[0];
     row.append(cell1, cell2, cell3);
     tbody.append(row);
   });
   table.append(thead, tbody);
+  return table;
 }
 
 const modalBtns = document.createElement('div');
@@ -108,7 +118,7 @@ closeBtn.textContent = 'Закрыть';
 modalBtns.append(newGameBtn2, closeBtn);
 
 function drawModal(content) {
-  modal.append(content, modalBtns);
+  modal.replaceChildren(content, modalBtns);
 }
 
 main.append(title, score, cards);
@@ -141,6 +151,7 @@ function openCard(e) {
         if (matches == 8) {
           drawModal(drawWinMsg(moves));
           modal.showModal();
+          localStorage.setItem(new Date().toLocaleString('ru-RU'), moves);
         }
         reset();
       } else {
@@ -168,7 +179,11 @@ cards.addEventListener('click', (e) => openCard(e));
 
 //buttons
 leadersBtn.addEventListener('click', () => {
-  drawModal(drawNoResultMsg());
+  if (localStorage.length > 0) {
+    drawModal(drawTable(getResults()));
+  } else {
+    drawModal(drawNoResultMsg());
+  }
   modal.showModal();
 });
 
