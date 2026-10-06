@@ -23,15 +23,15 @@ title.textContent = 'Memory game';
 
 const score = document.createElement('div');
 score.className = 'score';
-const moves = document.createElement('p');
-const matches = document.createElement('p');
+const movesContainer = document.createElement('p');
+const matchesContainer = document.createElement('p');
 const movesCount = document.createElement('span');
 movesCount.textContent = '0';
 const matchesCount = document.createElement('span');
 matchesCount.textContent = '0';
-moves.append('Число ходов: ', movesCount);
-matches.append('Совпадения: ', matchesCount);
-score.append(moves, matches);
+movesContainer.append('Число ходов: ', movesCount);
+matchesContainer.append('Совпадения: ', matchesCount, '/8');
+score.append(movesContainer, matchesContainer);
 
 const cards = document.createElement('div');
 cards.className = 'cards';
@@ -100,6 +100,8 @@ header.after(main, modal);
 let lock = false;
 let currentCard = null;
 let currentEmoji = null;
+let moves = 0;
+let matches = 0;
 
 function openCard(e) {
   if (lock) return;
@@ -114,10 +116,16 @@ function openCard(e) {
       if (emoji == currentEmoji) {
         lock = true;
         card.classList.add('open');
+        moves++;
+        matches++;
+        movesCount.textContent = moves;
+        matchesCount.textContent = matches;
         reset();
       } else {
         lock = true;
         card.classList.add('open');
+        moves++;
+        movesCount.textContent = moves;
         setTimeout(() => {
           card.classList.remove('open');
           currentCard.classList.remove('open');
@@ -146,8 +154,13 @@ closeBtn.addEventListener('click', () => {
 });
 
 function startNewGame() {
-  currentEmoji = null;
   lock = false;
+  currentCard = null;
+  currentEmoji = null;
+  moves = 0;
+  matches = 0;
+  movesCount.textContent = moves;
+  matchesCount.textContent = matches;
   drawCards(shuffle(emojis));
 }
 
