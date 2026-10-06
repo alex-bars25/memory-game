@@ -1,5 +1,7 @@
 const emojis = ['🚀', '🔥', '🎉', '💻', '🌐', '💾', '🔍', '🧠'];
-const pairs = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+function shuffle(emojis) {
+  return [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+}
 
 //header
 const header = document.createElement('header');
@@ -33,14 +35,18 @@ score.append(moves, matches);
 
 const cards = document.createElement('div');
 cards.className = 'cards';
-pairs.forEach(item => {
-  const card = document.createElement('div');
-  card.className = 'card';
-  const emoji = document.createElement('span');
-  card.append(emoji);
-  emoji.textContent = item;
-  cards.append(card); 
-})
+function drawCards(emojis) {
+  cards.textContent = '';
+  emojis.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    const emoji = document.createElement('span');
+    card.append(emoji);
+    emoji.textContent = item;
+    cards.append(card); 
+  });
+}
+drawCards(shuffle(emojis));
 
 //modal
 const modal = document.createElement('dialog');
@@ -90,10 +96,66 @@ modal.append(table, modalBtns);
 main.append(title, score, cards);
 header.after(main, modal);
 
+//game
+let lock = false;
+let currentCard = null;
+let currentEmoji = null;
+
+function openCard(e) {
+  if (lock) return;
+  const card = e.target.closest('div');
+  if (card.classList.contains('card')) {
+    let emoji = card.querySelector('span').textContent;    
+    if (!currentEmoji) {
+      card.classList.add('open');
+      currentCard = card;
+      currentEmoji = emoji;
+    } else {
+      if (emoji == currentEmoji) {
+        lock = true;
+        card.classList.add('open');
+        reset();
+      } else {
+        lock = true;
+        card.classList.add('open');
+        setTimeout(() => {
+          card.classList.remove('open');
+          currentCard.classList.remove('open');
+          reset();
+        }, 1000);
+      }
+    }
+  }
+}
+
+function reset() {
+  lock = false;
+  currentCard = null;
+  currentEmoji = null;
+}
+
+cards.addEventListener('click', (e) => openCard(e));
+
+//buttons
 leadersBtn.addEventListener('click', () => {
   modal.showModal();
 });
 
 closeBtn.addEventListener('click', () => {
   modal.close();
+});
+
+function startNewGame() {
+  currentEmoji = null;
+  lock = false;
+  drawCards(shuffle(emojis));
+}
+
+newGameBtn.addEventListener('click', () => {
+  startNewGame();
+});
+
+newGameBtn2.addEventListener('click', () => {
+  modal.close();
+  startNewGame();
 });
