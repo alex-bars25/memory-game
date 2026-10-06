@@ -104,6 +104,12 @@ h1 {
   padding: 80px 0;
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

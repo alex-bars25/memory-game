@@ -54,36 +54,51 @@ modal.className = 'modal';
 
 const message = document.createElement('div');
 message.className = 'message';
-const noResultMsg = document.createElement('p');
-noResultMsg.textContent = 'Пока нет результатов';
-const winMsg = document.createElement('p');
-winMsg.textContent = 'Вы победили! 🎉 \n Число ходов: 10'
-message.append(winMsg);
+const content = document.createElement('p');
+content.className = 'content';
 
-const table = document.createElement('table');
-const thead = document.createElement('thead');
-const tbody = document.createElement('tbody');
-const headRow = thead.insertRow();
-const headers = ['Место', 'Дата', 'Число ходов'];
-headers.forEach(item => {
-  const cell = document.createElement('th');
-  cell.textContent = item;
-  headRow.append(cell);
-});
+function drawNoResultMsg() {
+  content.textContent = 'Пока нет результатов';
+  message.append(content);
+  return message;
+}
+
+function drawWinMsg(count) {
+  const title = document.createElement('p');
+  title.textContent = 'Вы победили! 🎉🎉🎉';
+  const counter = document.createElement('p');
+  counter.textContent = `Число ходов: ${count}`;
+  content.append(title, counter);
+  message.append(content);
+  return message;
+}
+
 const results = [['06.10.2026', '10'], ['06.10.2026', '10'], ['06.10.2026', '10'], ['06.10.2026', '10'], ['06.10.2026', '10']]
-results.forEach((item, index) => {
-  const row = tbody.insertRow();
-  const cell1 = document.createElement('td');
-  cell1.textContent = index + 1;
-  const cell2 = document.createElement('td');
-  cell2.textContent = item[0];
-  const cell3 = document.createElement('td');
-  cell3.textContent = item[1];
-  row.append(cell1, cell2, cell3);
-  tbody.append(row);
-});
 
-table.append(thead, tbody);
+function drawTable(results) {
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const tbody = document.createElement('tbody');
+  const headRow = thead.insertRow();
+  const headers = ['Место', 'Дата', 'Число ходов'];
+  headers.forEach(item => {
+    const cell = document.createElement('th');
+    cell.textContent = item;
+    headRow.append(cell);
+  });
+  results.forEach((item, index) => {
+    const row = tbody.insertRow();
+    const cell1 = document.createElement('td');
+    cell1.textContent = index + 1;
+    const cell2 = document.createElement('td');
+    cell2.textContent = item[0];
+    const cell3 = document.createElement('td');
+    cell3.textContent = item[1];
+    row.append(cell1, cell2, cell3);
+    tbody.append(row);
+  });
+  table.append(thead, tbody);
+}
 
 const modalBtns = document.createElement('div');
 modalBtns.className = 'modal-buttons';
@@ -91,7 +106,10 @@ const newGameBtn2 = newGameBtn.cloneNode('deep');
 const closeBtn = document.createElement('button');
 closeBtn.textContent = 'Закрыть';
 modalBtns.append(newGameBtn2, closeBtn);
-modal.append(table, modalBtns);
+
+function drawModal(content) {
+  modal.append(content, modalBtns);
+}
 
 main.append(title, score, cards);
 header.after(main, modal);
@@ -120,6 +138,10 @@ function openCard(e) {
         matches++;
         movesCount.textContent = moves;
         matchesCount.textContent = matches;
+        if (matches == 8) {
+          drawModal(drawWinMsg(moves));
+          modal.showModal();
+        }
         reset();
       } else {
         lock = true;
@@ -146,6 +168,7 @@ cards.addEventListener('click', (e) => openCard(e));
 
 //buttons
 leadersBtn.addEventListener('click', () => {
+  drawModal(drawNoResultMsg());
   modal.showModal();
 });
 
