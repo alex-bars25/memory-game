@@ -79,7 +79,7 @@ function getResults() {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     const value = localStorage.getItem(key);
-    results.push([key, value]);
+    results.push([key.substring(0, key.indexOf(',')), value]);
   }
   return results.sort().sort((a, b) => a[1] - b[1]).slice(0, 10);
 }
